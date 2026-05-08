@@ -8,45 +8,78 @@ PhoneSafety is a benchmark of 700 safety-critical moments for evaluating phone-u
 2. **Unsafe action** — the model acts but crosses the safety boundary
 3. **Failing to do anything useful** — the model realizes neither the safe nor the unsafe behavior
 
-## Dataset
+## Setup
 
-The dataset (700 cases + screenshots) is hosted on Hugging Face:
+### 1. Clone this repo
 
-**https://huggingface.co/datasets/phonesafety-anon/PhoneSafety_Data**
+```bash
+git clone https://github.com/phonesafety-anon/PhoneSafety.git
+cd PhoneSafety
+```
 
-After downloading, place the data so that the structure looks like:
+### 2. Download dataset (one command)
+
+```bash
+python3 setup_data.py
+```
+
+This will download from Hugging Face and organize into the correct structure:
+
 ```
 PhoneSafety/
 ├── data/
 │   ├── phonesafety_700.jsonl
 │   ├── phonesafety_700_minimal_protocol.jsonl
 │   └── screenshots/
-│       ├── v5_000.png
+│       ├── v5_000.jpg
 │       ├── v5_001.jpg
 │       └── ...
-└── inference/
-    ├── run_inference.py
-    └── protocols.py
+├── inference/
+│   ├── run_inference.py
+│   └── protocols.py
+├── setup_data.py
+└── README.md
 ```
 
-## Quick Start
+### 3. Serve your model with vLLM
+
+Phone screenshots are high-resolution (~1264x2780), which requires sufficient context length. Use `--max-model-len 16384` or higher:
 
 ```bash
-# 1. Download dataset from Hugging Face and place in data/
+# Example: serve a 9B phone-use model on a single GPU
+CUDA_VISIBLE_DEVICES=0 vllm serve /path/to/your-model \
+    --port 8100 \
+    --max-model-len 16384 \
+    --trust-remote-code
 
-# 2. Unzip screenshots
-cd data && unzip screenshots.zip -d screenshots/ && cd ..
+# For larger models, use tensor parallelism:
+CUDA_VISIBLE_DEVICES=0,1 vllm serve /path/to/your-model \
+    --port 8100 \
+    --max-model-len 16384 \
+    --tensor-parallel-size 2 \
+    --trust-remote-code
+```
 
-# 3. Serve your model with vLLM
-vllm serve your-model --port 8000
+> **Important**: The default `--max-model-len 4096` is NOT enough for phone screenshots. You will get `max_tokens must be at least 1` errors. Use at least `16384`.
 
-# 4. Run inference under strict protocol
+### 4. Run inference
+
+```bash
+# Under strict protocol (main evaluation)
 python inference/run_inference.py \
-    --api_base http://localhost:8000/v1 \
+    --api_base http://localhost:8100/v1 \
     --api_key token-placeholder \
-    --model_name your-model \
+    --model_name /path/to/your-model \
     --protocol strict \
     --output_file outputs/your_model_strict.jsonl
+
+# Under minimal protocol (for ablation)
+python inference/run_inference.py \
+    --api_base http://localhost:8100/v1 \
+    --api_key token-placeholder \
+    --model_name /path/to/your-model \
+    --protocol minimal \
+    --output_file outputs/your_model_minimal.jsonl
 ```
 
 ## Data Format
@@ -88,10 +121,9 @@ Two protocols define the safe/unsafe boundary (see `inference/protocols.py`):
 ## Citation
 
 ```bibtex
-@inproceedings{phonesafety2026,
+@misc{tang2026phonesafety,
   title={Safe, or Simply Incapable? Rethinking Safety Evaluation for Phone-Use Agents},
-  author={Anonymous},
-  booktitle={Advances in Neural Information Processing Systems},
+  author={Zhengyang Tang and Yi Zhang and Chenxin Li and Xin Lai and Pengyuan Lyu and Yiduo Guo and Weinong Wang and Junyi Li and Yang Ding and Huawen Shen and Zhengyao Fang and Xingran Zhou and Liang Wu and Fei Tang and Sunqi Fan and Shangpin Peng and Zheng Ruan and Anran Zhang and Benyou Wang and Chengquan Zhang and Han Hu},
   year={2026}
 }
 ```
