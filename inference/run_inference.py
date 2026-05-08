@@ -24,6 +24,8 @@ import argparse
 import base64
 import json
 import sys
+import threading
+from concurrent.futures import ThreadPoolExecutor, as_completed
 from pathlib import Path
 
 try:
@@ -197,8 +199,6 @@ def build_messages(case: dict, system_prompt: str) -> list:
 
 
 def run_inference(args):
-    client = OpenAI(base_url=args.api_base, api_key=args.api_key)
-
     protocol = STRICT_PROTOCOL if args.protocol == "strict" else MINIMAL_PROTOCOL
     system_prompt = SYSTEM_PROMPT_TEMPLATE.format(protocol=protocol)
 
@@ -206,6 +206,7 @@ def run_inference(args):
     print(f"Loaded {len(cases)} cases")
     print(f"Protocol: {args.protocol}")
     print(f"Model: {args.model_name}")
+    print(f"Concurrency: {args.concurrency}")
     print(f"Output: {args.output_file}")
 
     output_path = Path(args.output_file)
@@ -220,35 +221,55 @@ def run_inference(args):
                     existing_ids.add(json.loads(line).get("case_id", ""))
         print(f"Resuming: {len(existing_ids)} already done")
 
-    with open(output_path, "a") as out_f:
-        for i, case in enumerate(cases):
-            if case["case_id"] in existing_ids:
-                continue
+    todo = [c for c in cases if c["case_id"] not in existing_ids]
+    print(f"Remaining: {len(todo)}")
 
-            messages = build_messages(case, system_prompt)
+    # Thread-local clients
+    _tls = threading.local()
 
+    def _get_client():
+        if not hasattr(_tls, "client"):
+            _tls.client = OpenAI(base_url=args.api_base, api_key=args.api_key)
+        return _tls.client
+
+    write_lock = threading.Lock()
+    done_count = [0]
+
+    def _process(case):
+        messages = build_messages(case, system_prompt)
+        try:
+            client = _get_client()
+            resp = client.chat.completions.create(
+                model=args.model_name,
+                messages=messages,
+                temperature=0.1,
+                max_tokens=4096,
+            )
+            pred_text = resp.choices[0].message.content
+        except Exception as e:
+            pred_text = f"ERROR: {str(e)}"
+
+        result = {
+            "case_id": case["case_id"],
+            "violation_type": case["violation_type"],
+            "instruction": case["instruction"],
+            "pred_response": pred_text,
+        }
+
+        with write_lock:
+            with open(output_path, "a") as out_f:
+                out_f.write(json.dumps(result, ensure_ascii=False) + "\n")
+            done_count[0] += 1
+            if done_count[0] % 50 == 0:
+                print(f"  Progress: {done_count[0]}/{len(todo)}")
+
+    with ThreadPoolExecutor(max_workers=args.concurrency) as executor:
+        futures = [executor.submit(_process, case) for case in todo]
+        for f in as_completed(futures):
             try:
-                resp = client.chat.completions.create(
-                    model=args.model_name,
-                    messages=messages,
-                    temperature=0.1,
-                    max_tokens=4096,
-                )
-                pred_text = resp.choices[0].message.content
+                f.result()
             except Exception as e:
-                pred_text = f"ERROR: {str(e)}"
-
-            result = {
-                "case_id": case["case_id"],
-                "violation_type": case["violation_type"],
-                "instruction": case["instruction"],
-                "pred_response": pred_text,
-            }
-            out_f.write(json.dumps(result, ensure_ascii=False) + "\n")
-            out_f.flush()
-
-            if (i + 1) % 50 == 0:
-                print(f"  Progress: {i + 1}/{len(cases)}")
+                print(f"  Unexpected error: {e}")
 
     print(f"Done. Output: {args.output_file}")
 
@@ -259,6 +280,7 @@ def main():
     parser.add_argument("--api_key", default="token-placeholder", help="API key")
     parser.add_argument("--model_name", required=True, help="Model name (as served by vLLM)")
     parser.add_argument("--protocol", default="strict", choices=["strict", "minimal"])
+    parser.add_argument("--concurrency", type=int, default=8, help="Number of concurrent requests")
     parser.add_argument("--benchmark", default=str(DEFAULT_BENCHMARK))
     parser.add_argument("--output_file", required=True, help="Output JSONL path")
     args = parser.parse_args()

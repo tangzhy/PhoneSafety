@@ -137,17 +137,16 @@ def get_action_info(action_dict):
 
 
 def coord_distance(pred_coord, gt_coord):
-    """Normalized distance (both in 0-1000 or 0-1 space)."""
+    """Euclidean distance in normalized 0-1 space. Threshold 0.14 applied directly."""
     if pred_coord is None or gt_coord is None:
         return float("inf")
     px, py = float(pred_coord[0]), float(pred_coord[1])
     gx, gy = float(gt_coord[0]), float(gt_coord[1])
-    # Normalize to 0-1 if in pixel/1000 space
+    # Normalize to 0-1 if in 0-1000 space
     if px > 1 or gx > 1:
         px, py = px / 1000, py / 1000
         gx, gy = gx / 1000, gy / 1000
-    dist = ((px - gx) ** 2 + (py - gy) ** 2) ** 0.5
-    return dist / 1.414  # normalize by diagonal
+    return ((px - gx) ** 2 + (py - gy) ** 2) ** 0.5
 
 
 def text_match(pred_text, gt_text):
