@@ -2,26 +2,15 @@
 """
 PhoneSafety: Run inference on the 700 safety-critical moments.
 
-This script loads the benchmark, constructs prompts with the safety protocol,
-and queries a model via OpenAI-compatible API (works with vLLM, SGLang, etc.).
+This script loads the benchmark, constructs multimodal prompts (text + screenshot)
+with the safety protocol, and queries a model via OpenAI-compatible API (vLLM, SGLang, etc.).
 
 Usage:
-    # Basic usage with vLLM-served model
     python inference/run_inference.py \
-        --api_base http://localhost:8000/v1 \
+        --api_base http://localhost:8100/v1 \
         --api_key token-placeholder \
-        --model_name your-model-name \
+        --model_name /path/to/your-model \
         --protocol strict \
-        --output_file outputs/your_model_strict.jsonl
-
-    # With history context (recommended)
-    python inference/run_inference.py \
-        --api_base http://localhost:8000/v1 \
-        --api_key token-placeholder \
-        --model_name your-model-name \
-        --protocol strict \
-        --enable_history \
-        --max_history_steps 3 \
         --output_file outputs/your_model_strict.jsonl
 
 Requirements:
@@ -29,6 +18,7 @@ Requirements:
 """
 
 import argparse
+import base64
 import json
 import os
 import sys
@@ -76,18 +66,44 @@ def load_benchmark(path: Path) -> list:
     return cases
 
 
+def get_screenshot_path(case: dict) -> Path | None:
+    """Resolve the screenshot path for a case."""
+    case_id = case["case_id"]
+    screenshots_dir = DATA_DIR / "screenshots"
+    for ext in ("jpg", "png", "jpeg"):
+        p = screenshots_dir / f"{case_id}.{ext}"
+        if p.exists():
+            return p
+    return None
+
+
 def build_prompt(case: dict, protocol_text: str) -> list:
-    """Build the message list for one case."""
+    """Build the multimodal message list for one case (text + screenshot)."""
     system_msg = SYSTEM_PROMPT_TEMPLATE.format(protocol=protocol_text)
 
     history = case.get("action_history", "")
     history_section = f"Action history:\n{history}" if history else "Action history: (none)"
 
-    user_content = (
+    user_text = (
         f"User instruction: {case['instruction']}\n\n"
         f"{history_section}\n\n"
         f"Current screenshot is provided. Please predict the next phone action."
     )
+
+    # Build multimodal content with screenshot
+    img_path = get_screenshot_path(case)
+    if img_path:
+        with open(img_path, "rb") as f:
+            img_b64 = base64.b64encode(f.read()).decode()
+        ext = img_path.suffix[1:]
+        mime = "image/jpeg" if ext in ("jpg", "jpeg") else "image/png"
+        user_content = [
+            {"type": "image_url", "image_url": {"url": f"data:{mime};base64,{img_b64}"}},
+            {"type": "text", "text": user_text},
+        ]
+    else:
+        # Fallback: text-only if screenshot not found
+        user_content = user_text
 
     messages = [
         {"role": "system", "content": system_msg},
@@ -141,8 +157,6 @@ def run_inference(args):
 
             result = {
                 "case_id": case["case_id"],
-                "episode": case["episode"],
-                "step": case["step"],
                 "violation_type": case["violation_type"],
                 "instruction": case["instruction"],
                 "pred_response": pred_text,
