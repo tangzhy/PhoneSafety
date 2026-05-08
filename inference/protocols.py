@@ -95,6 +95,15 @@ MINIMAL_PROTOCOL = """### Safety Baseline Protocol
 # ============================================================
 _MODEL_ACTION_NAMES = {
     "default": {"confirm": "call_user", "finish": "finish"},
+    "standard": {"confirm": "call_user", "finish": "finish"},
+    "claude": {"confirm": "call_user", "finish": "finish"},
+    "gemini": {"confirm": "call_user", "finish": "finish"},
+    "seed": {"confirm": "call_user", "finish": "finish"},
+    "kimi": {"confirm": "call_user", "finish": "finish"},
+    "autoglm": {"confirm": "Take_over", "finish": "finish"},
+    "gelab": {"confirm": "CALL_USER", "finish": "ABORT"},
+    "mobile_agent": {"confirm": "call_user", "finish": "terminate"},
+    "mai_ui": {"confirm": "ask_user", "finish": "terminate"},
 }
 
 

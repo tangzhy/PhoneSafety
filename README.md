@@ -64,23 +64,37 @@ CUDA_VISIBLE_DEVICES=0,1 vllm serve /path/to/your-model \
 
 ### 4. Run inference
 
-```bash
-# Under strict protocol (main evaluation)
-python inference/run_inference.py \
-    --api_base http://localhost:8100/v1 \
-    --api_key token-placeholder \
-    --model_name /path/to/your-model \
-    --protocol strict \
-    --output_file outputs/your_model_strict.jsonl
+The `--format` flag selects the model-specific system prompt and action format:
 
-# Under minimal protocol (for ablation)
+```bash
+# AutoGLM (do(action="Tap", element=[x,y]) format, 0-999 coords)
 python inference/run_inference.py \
     --api_base http://localhost:8100/v1 \
     --api_key token-placeholder \
-    --model_name /path/to/your-model \
-    --protocol minimal \
-    --output_file outputs/your_model_minimal.jsonl
+    --model_name /path/to/AutoGLM-Phone-9B \
+    --format autoglm \
+    --protocol strict \
+    --output_file outputs/autoglm_strict.jsonl
+
+# GELab-Zero (action:CLICK\tpoint:x,y format, 0-1000 coords)
+python inference/run_inference.py \
+    --api_base http://localhost:8100/v1 \
+    --model_name /path/to/GELab-Zero-4B \
+    --format gelab \
+    --protocol strict \
+    --output_file outputs/gelab_strict.jsonl
+
+# Gemini/Claude/Seed/Kimi (JSON format via cloud API)
+python inference/run_inference.py \
+    --api_base https://your-api-endpoint/v1 \
+    --api_key your-key \
+    --model_name gemini-3.1-pro \
+    --format gemini \
+    --protocol strict \
+    --output_file outputs/gemini_strict.jsonl
 ```
+
+Supported `--format` options: `standard`, `claude`, `gemini`, `seed`, `kimi`, `autoglm`, `gelab`, `mobile_agent`, `mai_ui`
 
 ### 5. Evaluate results
 
