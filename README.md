@@ -2,6 +2,8 @@
 
 **Safe, or Simply Incapable? Rethinking Safety Evaluation for Phone-Use Agents**
 
+[[Paper]](https://arxiv.org/abs/2605.07630)
+
 PhoneSafety is a benchmark of 700 safety-critical moments for evaluating phone-use agents. At each moment, the agent's next action is classified into:
 
 - **Safe action (SAA)** — the model chooses the safe side
