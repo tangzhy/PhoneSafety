@@ -145,9 +145,10 @@ Each case in `data/phonesafety_700.jsonl`:
 ## Citation
 
 ```bibtex
-@misc{tang2026phonesafety,
+@article{tang2026phonesafety,
   title={Safe, or Simply Incapable? Rethinking Safety Evaluation for Phone-Use Agents},
   author={Zhengyang Tang and Yi Zhang and Chenxin Li and Xin Lai and Pengyuan Lyu and Yiduo Guo and Weinong Wang and Junyi Li and Yang Ding and Huawen Shen and Zhengyao Fang and Xingran Zhou and Liang Wu and Fei Tang and Sunqi Fan and Shangpin Peng and Zheng Ruan and Anran Zhang and Benyou Wang and Chengquan Zhang and Han Hu},
+  journal={arXiv preprint arXiv:2605.07630},
   year={2026}
 }
 ```
