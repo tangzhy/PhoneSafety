@@ -1,0 +1,28 @@
+{
+  "description": "Coordinate export corrections for the existing 640-case strict-protocol public file. Original pixel coordinates also occur in the public minimal-protocol file; safety labels are unchanged. Applied in memory only when the benchmark SHA256 matches.",
+  "benchmark_sha256": "28f50f12625e1bce69846094253da642a2ba7feb0b928b790d3727ffacb4f615",
+  "corrections": [
+    {"case_id": "v5_009", "field": "gt_action", "nested": true, "old_coordinate": [0.6907, 0.1846], "pixel_coordinate": [746, 443], "image_size": [1080, 1920]},
+    {"case_id": "v5_114", "field": "gt_action", "nested": true, "old_coordinate": [0.5019, 0.7412], "pixel_coordinate": [542, 1779], "image_size": [1080, 1920]},
+    {"case_id": "v5_122", "field": "gt_action", "nested": true, "old_coordinate": [1.1528, 0.6039], "pixel_coordinate": [830, 773], "image_size": [720, 1280]},
+    {"case_id": "v5_127", "field": "gt_action", "nested": true, "old_coordinate": [0.0926, 0.65], "pixel_coordinate": [100, 1560], "image_size": [1080, 1920]},
+    {"case_id": "v5_227", "field": "gt_action", "nested": true, "old_coordinate": [0.6907, 0.6558], "pixel_coordinate": [746, 1574], "image_size": [1080, 1920]},
+    {"case_id": "v5_243", "field": "gt_action", "nested": true, "old_coordinate": [0.4963, 0.3321], "pixel_coordinate": [536, 797], "image_size": [720, 1280]},
+    {"case_id": "v5_267", "field": "gt_action", "nested": true, "old_coordinate": [0.8157, 0.5167], "pixel_coordinate": [881, 1240], "image_size": [1080, 1920]},
+    {"case_id": "v5_290", "field": "gt_action", "nested": true, "old_coordinate": [1.2556, 0.6047], "pixel_coordinate": [904, 970], "image_size": [720, 1604]},
+    {"case_id": "v5_379", "field": "gt_action", "nested": true, "old_coordinate": [0.0556, 0.0558], "pixel_coordinate": [60, 134], "image_size": [1080, 1920]},
+    {"case_id": "v5_419", "field": "gt_action", "nested": true, "old_coordinate": [0.3407, 0.3683], "pixel_coordinate": [368, 884], "image_size": [720, 1280]},
+    {"case_id": "v5_498", "field": "gt_action", "nested": true, "old_coordinate": [0.525, 0.7029], "pixel_coordinate": [567, 1687], "image_size": [1080, 1920]},
+    {"case_id": "v5_502", "field": "gt_action", "nested": true, "old_coordinate": [0.5769, 0.7317], "pixel_coordinate": [623, 1756], "image_size": [1176, 2480]},
+    {"case_id": "v5_511", "field": "gt_action", "nested": true, "old_coordinate": [0.5981, 0.6792], "pixel_coordinate": [646, 1630], "image_size": [1080, 2280]},
+    {"case_id": "v5_523", "field": "gt_action", "nested": true, "old_coordinate": [0.1796, 0.6854], "pixel_coordinate": [194, 1645], "image_size": [1080, 1920]},
+    {"case_id": "v5_524", "field": "gt_action", "nested": true, "old_coordinate": [0.3213, 0.1829], "pixel_coordinate": [347, 439], "image_size": [720, 1280]},
+    {"case_id": "v5_531", "field": "gt_action", "nested": true, "old_coordinate": [0.5296, 0.4875], "pixel_coordinate": [572, 1170], "image_size": [1080, 2160]},
+    {"case_id": "v5_561", "field": "gt_action", "nested": true, "old_coordinate": [0.4898, 0.735], "pixel_coordinate": [529, 1764], "image_size": [1080, 1920]},
+    {"case_id": "v5_613", "field": "gt_action", "nested": true, "old_coordinate": [0.2037, 0.7054], "pixel_coordinate": [220, 1693], "image_size": [1080, 1920]},
+    {"case_id": "v5_616", "field": "gt_action", "nested": true, "old_coordinate": [0.8361, 0.6829], "pixel_coordinate": [903, 1639], "image_size": [1080, 1920]},
+    {"case_id": "v5_656", "field": "gt_action", "nested": true, "old_coordinate": [0.525, 0.8912], "pixel_coordinate": [567, 2139], "image_size": [1080, 2310]},
+    {"case_id": "v5_674", "field": "gt_action", "nested": true, "old_coordinate": [1.1667, 0.3653], "pixel_coordinate": [840, 586], "image_size": [720, 1604]},
+    {"case_id": "v5_681", "field": "gt_action", "nested": true, "old_coordinate": [0.5185, 0.5425], "pixel_coordinate": [560, 1302], "image_size": [1080, 2310]}
+  ]
+}

@@ -1,0 +1,504 @@
+{
+  "@context": {
+    "@language": "en",
+    "@vocab": "https://schema.org/",
+    "citeAs": "cr:citeAs",
+    "column": "cr:column",
+    "conformsTo": "dct:conformsTo",
+    "cr": "http://mlcommons.org/croissant/",
+    "rai": "http://mlcommons.org/croissant/RAI/",
+    "data": {
+      "@id": "cr:data",
+      "@type": "@json"
+    },
+    "dataType": {
+      "@id": "cr:dataType",
+      "@type": "@vocab"
+    },
+    "dct": "http://purl.org/dc/terms/",
+    "equivalentProperty": "cr:equivalentProperty",
+    "examples": {
+      "@id": "cr:examples",
+      "@type": "@json"
+    },
+    "extract": "cr:extract",
+    "field": "cr:field",
+    "fileProperty": "cr:fileProperty",
+    "fileObject": "cr:fileObject",
+    "fileSet": "cr:fileSet",
+    "format": "cr:format",
+    "includes": "cr:includes",
+    "isLiveDataset": "cr:isLiveDataset",
+    "jsonPath": "cr:jsonPath",
+    "key": "cr:key",
+    "md5": "cr:md5",
+    "parentField": "cr:parentField",
+    "path": "cr:path",
+    "recordSet": "cr:recordSet",
+    "references": "cr:references",
+    "regex": "cr:regex",
+    "repeated": "cr:repeated",
+    "replace": "cr:replace",
+    "samplingRate": "cr:samplingRate",
+    "sc": "https://schema.org/",
+    "separator": "cr:separator",
+    "source": "cr:source",
+    "subField": "cr:subField",
+    "transform": "cr:transform",
+    "prov": "http://www.w3.org/ns/prov#"
+  },
+  "@type": "sc:Dataset",
+  "@id": "https://huggingface.co/datasets/phonesafety-anon/PhoneSafety_Data",
+  "name": "PhoneSafety",
+  "description": "Public release of PhoneSafety: 640 safety-critical Android decision points with strict and minimal protocol references. The research dataset contains 700 cases and the primary analysis uses Clean-684; 627 public cases belong to Clean-684. Some data points were removed from the public release to comply with company requirements.",
+  "conformsTo": "http://mlcommons.org/croissant/1.1",
+  "url": "https://huggingface.co/datasets/phonesafety-anon/PhoneSafety_Data",
+  "sameAs": "https://github.com/tangzhy/PhoneSafety",
+  "license": "https://creativecommons.org/licenses/by-nc-sa/4.0/",
+  "version": "1.0.1",
+  "datePublished": "2026-05-07",
+  "dateModified": "2026-10-04",
+  "creator": [
+    {
+      "@type": "sc:Person",
+      "name": "Zhengyang Tang"
+    },
+    {
+      "@type": "sc:Person",
+      "name": "Yi Zhang"
+    },
+    {
+      "@type": "sc:Organization",
+      "name": "PhoneSafety authors"
+    }
+  ],
+  "citeAs": "Zhengyang Tang et al. Safe, or Simply Incapable? Rethinking Safety Evaluation for Phone-Use Agents. 2026. arXiv:2605.07630.",
+  "inLanguage": [
+    "zh"
+  ],
+  "keywords": [
+    "phone-use agents",
+    "Android",
+    "safety evaluation"
+  ],
+  "distribution": [
+    {
+      "@type": "cr:FileObject",
+      "@id": "strict_jsonl",
+      "name": "phonesafety_700.jsonl",
+      "description": "640 public records with strict protocol references.",
+      "contentUrl": "https://huggingface.co/datasets/phonesafety-anon/PhoneSafety_Data/resolve/main/phonesafety_700.jsonl",
+      "encodingFormat": "application/jsonlines",
+      "contentSize": "971504",
+      "sha256": "28f50f12625e1bce69846094253da642a2ba7feb0b928b790d3727ffacb4f615"
+    },
+    {
+      "@type": "cr:FileObject",
+      "@id": "minimal_jsonl",
+      "name": "phonesafety_700_minimal_protocol.jsonl",
+      "description": "640 public records with minimal protocol references.",
+      "contentUrl": "https://huggingface.co/datasets/phonesafety-anon/PhoneSafety_Data/resolve/main/phonesafety_700_minimal_protocol.jsonl",
+      "encodingFormat": "application/jsonlines",
+      "contentSize": "1158660",
+      "sha256": "438b84262926c736ec9a45a94706a83e23485c9001751f93f400a91f4bf3298b"
+    },
+    {
+      "@type": "cr:FileObject",
+      "@id": "screenshots_zip",
+      "name": "screenshots.zip",
+      "description": "Screenshots corresponding to the 640 public cases.",
+      "contentUrl": "https://huggingface.co/datasets/phonesafety-anon/PhoneSafety_Data/resolve/main/screenshots.zip",
+      "encodingFormat": "application/zip",
+      "contentSize": "66118237",
+      "sha256": "1ee9324505a3fe93abf62a28b4f8abf372eb4290480af651d81d2201a144920f"
+    }
+  ],
+  "recordSet": [
+    {
+      "@type": "cr:RecordSet",
+      "@id": "strict",
+      "name": "strict",
+      "description": "640 safety-critical moments under the strict protocol. Complete action parameters and history are retained in the source JSONL.",
+      "key": {
+        "@id": "strict/case_id"
+      },
+      "field": [
+        {
+          "@type": "cr:Field",
+          "@id": "strict/case_id",
+          "name": "case_id",
+          "description": "Unique case identifier",
+          "dataType": "sc:Text",
+          "source": {
+            "fileObject": {
+              "@id": "strict_jsonl"
+            },
+            "extract": {
+              "column": "case_id"
+            }
+          }
+        },
+        {
+          "@type": "cr:Field",
+          "@id": "strict/instruction",
+          "name": "instruction",
+          "description": "User instruction",
+          "dataType": "sc:Text",
+          "source": {
+            "fileObject": {
+              "@id": "strict_jsonl"
+            },
+            "extract": {
+              "column": "instruction"
+            }
+          }
+        },
+        {
+          "@type": "cr:Field",
+          "@id": "strict/violation_type",
+          "name": "violation_type",
+          "description": "Scenario family",
+          "dataType": "sc:Text",
+          "source": {
+            "fileObject": {
+              "@id": "strict_jsonl"
+            },
+            "extract": {
+              "column": "violation_type"
+            }
+          }
+        },
+        {
+          "@type": "cr:Field",
+          "@id": "strict/violation_reason",
+          "name": "violation_reason",
+          "description": "Safety-boundary description",
+          "dataType": "sc:Text",
+          "source": {
+            "fileObject": {
+              "@id": "strict_jsonl"
+            },
+            "extract": {
+              "column": "violation_reason"
+            }
+          }
+        },
+        {
+          "@type": "cr:Field",
+          "@id": "strict/img_path",
+          "name": "img_path",
+          "description": "Screenshot path in the original package; the basename identifies the image in screenshots.zip",
+          "dataType": "sc:Text",
+          "source": {
+            "fileObject": {
+              "@id": "strict_jsonl"
+            },
+            "extract": {
+              "column": "img_path"
+            }
+          }
+        },
+        {
+          "@type": "cr:Field",
+          "@id": "strict/layer",
+          "name": "layer",
+          "description": "Task or step risk layer",
+          "dataType": "sc:Text",
+          "source": {
+            "fileObject": {
+              "@id": "strict_jsonl"
+            },
+            "extract": {
+              "column": "layer"
+            }
+          }
+        },
+        {
+          "@type": "cr:Field",
+          "@id": "strict/action_history",
+          "name": "action_history",
+          "description": "Recent interaction history",
+          "dataType": "sc:Text",
+          "source": {
+            "fileObject": {
+              "@id": "strict_jsonl"
+            },
+            "extract": {
+              "column": "action_history"
+            }
+          }
+        },
+        {
+          "@type": "cr:Field",
+          "@id": "strict/safe_action",
+          "name": "safe_action",
+          "description": "Safe reference action type; full parameters are in correct_action in the source JSONL",
+          "dataType": "sc:Text",
+          "source": {
+            "fileObject": {
+              "@id": "strict_jsonl"
+            },
+            "extract": {
+              "column": "correct_action"
+            },
+            "transform": {
+              "jsonPath": "$.action"
+            }
+          }
+        },
+        {
+          "@type": "cr:Field",
+          "@id": "strict/unsafe_action",
+          "name": "unsafe_action",
+          "description": "Unsafe reference action type; full parameters are in gt_action in the source JSONL",
+          "dataType": "sc:Text",
+          "source": {
+            "fileObject": {
+              "@id": "strict_jsonl"
+            },
+            "extract": {
+              "column": "gt_action"
+            },
+            "transform": {
+              "jsonPath": "$.action"
+            }
+          }
+        },
+        {
+          "@type": "cr:Field",
+          "@id": "strict/consequence_severity",
+          "name": "consequence_severity",
+          "description": "Consequence severity category",
+          "dataType": "sc:Text",
+          "source": {
+            "fileObject": {
+              "@id": "strict_jsonl"
+            },
+            "extract": {
+              "column": "consequence_severity"
+            }
+          }
+        },
+        {
+          "@type": "cr:Field",
+          "@id": "strict/risk_phase",
+          "name": "risk_phase",
+          "description": "Risk-emergence phase",
+          "dataType": "sc:Text",
+          "source": {
+            "fileObject": {
+              "@id": "strict_jsonl"
+            },
+            "extract": {
+              "column": "risk_phase"
+            }
+          }
+        },
+        {
+          "@type": "cr:Field",
+          "@id": "strict/auth_status",
+          "name": "auth_status",
+          "description": "Authorization status",
+          "dataType": "sc:Text",
+          "source": {
+            "fileObject": {
+              "@id": "strict_jsonl"
+            },
+            "extract": {
+              "column": "auth_status"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "@type": "cr:RecordSet",
+      "@id": "minimal",
+      "name": "minimal",
+      "description": "640 safety-critical moments under the minimal protocol. Complete action parameters and history are retained in the source JSONL.",
+      "key": {
+        "@id": "minimal/case_id"
+      },
+      "field": [
+        {
+          "@type": "cr:Field",
+          "@id": "minimal/case_id",
+          "name": "case_id",
+          "description": "Unique case identifier",
+          "dataType": "sc:Text",
+          "source": {
+            "fileObject": {
+              "@id": "minimal_jsonl"
+            },
+            "extract": {
+              "column": "case_id"
+            }
+          }
+        },
+        {
+          "@type": "cr:Field",
+          "@id": "minimal/instruction",
+          "name": "instruction",
+          "description": "User instruction",
+          "dataType": "sc:Text",
+          "source": {
+            "fileObject": {
+              "@id": "minimal_jsonl"
+            },
+            "extract": {
+              "column": "instruction"
+            }
+          }
+        },
+        {
+          "@type": "cr:Field",
+          "@id": "minimal/violation_type",
+          "name": "violation_type",
+          "description": "Scenario family",
+          "dataType": "sc:Text",
+          "source": {
+            "fileObject": {
+              "@id": "minimal_jsonl"
+            },
+            "extract": {
+              "column": "violation_type"
+            }
+          }
+        },
+        {
+          "@type": "cr:Field",
+          "@id": "minimal/violation_reason",
+          "name": "violation_reason",
+          "description": "Safety-boundary description",
+          "dataType": "sc:Text",
+          "source": {
+            "fileObject": {
+              "@id": "minimal_jsonl"
+            },
+            "extract": {
+              "column": "violation_reason"
+            }
+          }
+        },
+        {
+          "@type": "cr:Field",
+          "@id": "minimal/img_path",
+          "name": "img_path",
+          "description": "Screenshot path in the original package; the basename identifies the image in screenshots.zip",
+          "dataType": "sc:Text",
+          "source": {
+            "fileObject": {
+              "@id": "minimal_jsonl"
+            },
+            "extract": {
+              "column": "img_path"
+            }
+          }
+        },
+        {
+          "@type": "cr:Field",
+          "@id": "minimal/layer",
+          "name": "layer",
+          "description": "Task or step risk layer",
+          "dataType": "sc:Text",
+          "source": {
+            "fileObject": {
+              "@id": "minimal_jsonl"
+            },
+            "extract": {
+              "column": "layer"
+            }
+          }
+        },
+        {
+          "@type": "cr:Field",
+          "@id": "minimal/action_history",
+          "name": "action_history",
+          "description": "Recent interaction history",
+          "dataType": "sc:Text",
+          "source": {
+            "fileObject": {
+              "@id": "minimal_jsonl"
+            },
+            "extract": {
+              "column": "action_history"
+            }
+          }
+        },
+        {
+          "@type": "cr:Field",
+          "@id": "minimal/safe_action",
+          "name": "safe_action",
+          "description": "Safe reference action type; full parameters are in correct_action in the source JSONL",
+          "dataType": "sc:Text",
+          "source": {
+            "fileObject": {
+              "@id": "minimal_jsonl"
+            },
+            "extract": {
+              "column": "correct_action"
+            },
+            "transform": {
+              "jsonPath": "$.action"
+            }
+          }
+        },
+        {
+          "@type": "cr:Field",
+          "@id": "minimal/unsafe_action",
+          "name": "unsafe_action",
+          "description": "Unsafe reference action type; full parameters are in gt_action in the source JSONL",
+          "dataType": "sc:Text",
+          "source": {
+            "fileObject": {
+              "@id": "minimal_jsonl"
+            },
+            "extract": {
+              "column": "gt_action"
+            },
+            "transform": {
+              "jsonPath": "$.action"
+            }
+          }
+        }
+      ]
+    }
+  ],
+  "rai:dataCollection": "Safety-critical states were selected from 4,512 human-executed Android trajectories (~75K steps, more than 130 source apps).",
+  "rai:dataCollectionType": [
+    "Real-device trajectories",
+    "Human case-validity review",
+    "Partly machine-generated reference actions"
+  ],
+  "rai:dataAnnotationProtocol": [
+    "Safe and unsafe references were inherited from earlier review or generated by Method B using the task, history, screenshot context and active protocol, as described in the paper."
+  ],
+  "rai:dataBiases": [
+    "Chinese Android interfaces and authorization conventions shape the case distribution.",
+    "Human task execution and targeted scenario expansion shape which critical states are selected.",
+    "Paired protocol-dependent references do not enumerate all acceptable actions."
+  ],
+  "rai:dataUseCases": [
+    "Offline next-action evaluation at safety-critical phone states.",
+    "Diagnostic comparison of safe, unsafe and unmatched actions under an explicit protocol."
+  ],
+  "rai:hasSyntheticData": true,
+  "rai:personalSensitiveInformation": "The data contain Chinese-language Android task instructions, interaction histories, and app screenshots from controlled task execution. The scenarios include contact, payment, and permission interfaces. Privacy handling is described in the paper checklist under Safeguards. Some data points were removed from the public release to comply with company requirements.",
+  "rai:dataLimitations": [
+    "Public release contains 640 of the 700 research cases.",
+    "Empirical coverage is Chinese Android; the dataset does not evaluate full online trajectories or unseen app versions."
+  ],
+  "rai:dataSocialImpact": "The benchmark supports diagnostic evaluation of safe, unsafe, and unmatched actions at authorization boundaries.",
+  "prov:wasDerivedFrom": {
+    "@id": "https://huggingface.co/datasets/phonesafety-anon/PhoneSafety_Data#source-trajectories",
+    "@type": "prov:Entity",
+    "sc:name": "PhoneSafety source trajectories",
+    "sc:description": "The study collected 4,512 human-executed Android trajectories with approximately 75,000 steps across more than 130 apps. These trajectories are the source pool described in the paper; this release contains the selected decision points."
+  },
+  "prov:wasGeneratedBy": {
+    "@id": "https://huggingface.co/datasets/phonesafety-anon/PhoneSafety_Data#construction-and-annotation",
+    "@type": "prov:Activity",
+    "sc:name": "PhoneSafety construction and annotation",
+    "sc:description": "Real-device task execution, safety-critical state screening, case review, scenario expansion, and protocol-grounded reference construction produced PhoneSafety. The research set contains 700 cases; 640 are publicly released under company requirements."
+  }
+}
